@@ -1,0 +1,2444 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/fonts/remixicon/remixicon.css">
+<style>
+    :root {
+        --primary-color: #2563eb;
+        --primary-hover: #1d4ed8;
+        --primary-color-rgb: 37, 99, 235; /* 添加RGB值，对应#2563eb */
+        --secondary-color: #7c3aed;
+        --background-color: #ffffff;
+        --text-color: #333333;
+        --border-color: #e0e0e0;
+        --error-color: #ef4444;
+        --success-color: #10b981;
+        --success-color-rgb: 16, 185, 129; /* 添加成功色RGB值，对应#10b981 */
+        --input-bg: #f9fafb;
+        --card-bg: rgba(255, 255, 255, 0.95);
+        --input-placeholder: #94a3b8;
+        --input-text: #333333;
+        --step-inactive: #e0e0e0;
+    }
+
+    [data-theme="dark"] {
+        --background-color: #1c1c1e;
+        --text-color: #ffffff;
+        --border-color: #3d3d42;
+        --input-bg: #2a2a2c;
+        --card-bg: rgba(40, 40, 45, 0.92);
+        --input-placeholder: #9ca3af;
+        --input-text: #ffffff;
+        --step-inactive: #4a4a4c;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* 使用更现代的渐变背景 */
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        position: relative;
+        overflow-y: auto;
+        overflow-x: hidden;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        transition: background 0.3s ease;
+    }
+
+    /* 允许输入框可选中 */
+    input {
+        user-select: text !important;
+        -webkit-user-select: text !important;
+        -moz-user-select: text !important;
+        -ms-user-select: text !important;
+    }
+
+    /* 添加动态背景 */
+    body::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        z-index: 0;
+        opacity: 0.6;
+        animation: backgroundShimmer 100s infinite linear;
+    }
+
+    @keyframes backgroundShimmer {
+        0% { background-position: 0 0; }
+        100% { background-position: 100% 100%; }
+    }
+
+    .container {
+        width: 100%;
+        max-width: 480px;
+        padding: 20px;
+        position: relative;
+        z-index: 1;
+        margin: auto;
+    }
+
+    @media (max-height: 800px) {
+        body {
+            align-items: flex-start;
+            padding: 20px 0;
+        }
+        
+        .container {
+            margin: 0 auto;
+        }
+    }
+
+    .card {
+        background: var(--card-bg);
+        border-radius: 24px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(16px);
+        transform: translateY(0);
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        position: relative;
+        overflow: hidden;
+        min-height: 520px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* 添加卡片背景装饰 */
+    .card::before {
+        content: '';
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+        top: -150px;
+        right: -150px;
+        opacity: 0.05;
+        border-radius: 50%;
+    }
+
+    .card::after {
+        content: '';
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, var(--secondary-color) 0%, transparent 70%);
+        bottom: -100px;
+        left: -100px;
+        opacity: 0.05;
+        border-radius: 50%;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.15);
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 35px;
+        position: relative;
+    }
+
+    /* 为头部增加更多上方空间 */
+    .step2-active .header {
+        margin-top: 15px;
+        margin-bottom: 45px;
+    }
+
+    .header h1 {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin: 0;
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+    }
+
+    .header p {
+        color: var(--text-color);
+        opacity: 0.7;
+        margin: 10px 0 0;
+        font-size: 16px;
+    }
+
+    .form-group {
+        margin-bottom: 24px;
+        position: relative;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--text-color);
+        font-weight: 500;
+        font-size: 15px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 14px 16px;
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        background: var(--input-bg);
+        color: var(--input-text);
+        font-size: 16px;
+        transition: all 0.25s ease;
+        box-sizing: border-box;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    .form-group input::placeholder {
+        color: var(--input-placeholder);
+        opacity: 0.8;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    .button {
+        width: 100%;
+        padding: 16px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.1s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+    }
+
+    .button:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(37, 99, 235, 0.25);
+    }
+
+    .button:active {
+        transform: translateY(0);
+    }
+
+    /* 添加按钮点击效果 */
+    .button::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: rgba(255, 255, 255, 0.5);
+        opacity: 0;
+        border-radius: 100%;
+        transform: scale(1, 1) translate(-50%, -50%);
+        transform-origin: 50% 50%;
+    }
+
+    .button:active::after {
+        animation: ripple 0.6s ease-out;
+    }
+
+    @keyframes ripple {
+        0% {
+            transform: scale(0, 0);
+            opacity: 0.5;
+        }
+        100% {
+            transform: scale(20, 20);
+            opacity: 0;
+        }
+    }
+
+    .message {
+        text-align: center;
+        margin-top: 15px;
+        padding: 14px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 500;
+        display: none;
+        animation: fadeInUp 0.3s ease;
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.error {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--error-color);
+    }
+
+    .message.success {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success-color);
+    }
+
+    .login-link {
+        text-align: center;
+        margin-top: 24px;
+    }
+
+    .login-link a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+
+    .login-link a:hover {
+        color: var(--primary-hover);
+        text-decoration: underline;
+    }
+
+    /* 改进密码强度指示器样式 */
+    .password-strength {
+        margin-top: 10px;
+        height: 6px;
+        border-radius: 3px;
+        background: var(--border-color);
+        overflow: hidden;
+    }
+
+    .password-strength-bar {
+        height: 100%;
+        width: 0;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        border-radius: 3px;
+    }
+
+    .strength-weak { 
+        width: 33.33%; 
+        background: var(--error-color); 
+    }
+    .strength-medium { 
+        width: 66.66%; 
+        background: #f59e0b; 
+    }
+    .strength-strong { 
+        width: 100%; 
+        background: var(--success-color); 
+    }
+
+    .password-tips {
+        margin-top: 10px;
+        font-size: 14px;
+        color: var(--text-color);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .password-tips .icon {
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .password-tips .text {
+        flex: 1;
+    }
+
+    /* 修复特定密码框的小眼睛位置 */
+    #password + .password-toggle {
+        top: 39px; /* 使用固定位置确保小眼睛在第一个密码框中居中 */
+    }
+
+    /* 确保确认密码框的小眼睛位置正确 */
+    #confirmPassword + .password-toggle {
+        top: 39px; /* 保持一致性 */
+    }
+
+    /* 为所有密码框的小眼睛图标设置标准样式 */
+    .password-toggle {
+        position: absolute;
+        right: 12px;
+        transform: none; /* 不使用transform */
+        background: none;
+        border: none;
+        padding: 0;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--text-color);
+        opacity: 0.6;
+        transition: all 0.2s ease;
+        z-index: 10;
+        font-size: 16px;
+    }
+
+    .password-toggle:hover {
+        opacity: 1;
+    }
+
+    .form-group input[type="password"],
+    .form-group input[type="text"] {
+        padding-right: 40px;
+        box-sizing: border-box;
+        width: 100%;
+    }
+
+    /* 验证码输入框样式 */
+    .verification-code-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .verification-code-container .form-group {
+        flex: 1;
+    }
+
+    .resend-code {
+        margin-left: auto;
+        font-size: 14px;
+        color: var(--primary-color);
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .resend-code:hover {
+        color: var(--primary-hover);
+        text-decoration: underline;
+    }
+
+    .resend-code.disabled {
+        color: var(--border-color);
+        cursor: not-allowed;
+        text-decoration: none;
+    }
+
+    .countdown {
+        font-size: 14px;
+        color: var(--text-color);
+        opacity: 0.7;
+    }
+
+    /* 改进步骤指示器 */
+    .step-indicator {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+        position: relative;
+        width: 80px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .step-indicator::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        right: 10px;
+        height: 2px;
+        background-color: var(--step-inactive);
+        transform: translateY(-50%);
+        z-index: 0;
+    }
+
+    .step {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background-color: var(--step-inactive);
+        margin: 0 12px;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .step.active {
+        background-color: var(--primary-color);
+        transform: scale(1.2);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+    }
+
+    /* 添加表单过渡动画 */
+    #registerForm, #verificationForm {
+        transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    #verificationForm {
+        opacity: 0;
+        transform: translateX(50px);
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #verificationForm.active {
+        opacity: 1;
+        transform: translateX(0);
+        position: relative;
+        pointer-events: all;
+        justify-content: space-between;
+        min-height: 400px;
+    }
+
+    #registerForm.inactive {
+        opacity: 0;
+        transform: translateX(-50px);
+        position: absolute;
+        pointer-events: none;
+    }
+
+    /* 步骤指示器动画 */
+    .step {
+        transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    .step-indicator::before {
+        transition: background-color 0.4s ease;
+    }
+    
+    .step-indicator.step2::before {
+        background-image: linear-gradient(to right, var(--primary-color) 50%, var(--step-inactive) 50%);
+    }
+    
+    /* 添加表单元素动画 */
+    .form-animate-in .form-group,
+    .form-animate-in button,
+    .form-animate-in .login-link {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    
+    .form-animate-in.active .form-group,
+    .form-animate-in.active button,
+    .form-animate-in.active .login-link {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* 让按钮不受过渡延迟影响 */
+    .form-animate-in.active button {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0s !important;
+    }
+    
+    /* 按顺序显示表单元素，但不包括按钮 */
+    .form-animate-in.active .form-group:nth-child(1) { transition-delay: 0.1s; }
+    .form-animate-in.active .form-group:nth-child(2) { transition-delay: 0.2s; }
+    .form-animate-in.active .login-link { transition-delay: 0.3s; }
+    
+    /* 添加发送验证码加载动画 */
+    .sending-indicator {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(3px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .sending-indicator.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* 二级按钮样式 */
+    .button-secondary {
+        background-color: transparent;
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+        box-shadow: none;
+        transition: all 0.1s ease;
+    }
+
+    .button-secondary:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-color: var(--text-color);
+        box-shadow: none;
+    }
+
+    [data-theme="dark"] .button-secondary:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    /* 在验证码步骤添加底部信息 */
+    .verification-footer {
+        margin-top: auto;
+        padding-top: 30px;
+        text-align: center;
+        font-size: 14px;
+        color: var(--text-color);
+        opacity: 0.6;
+    }
+
+    .verification-footer a {
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+
+    .verification-footer a:hover {
+        text-decoration: underline;
+    }
+
+    /* 修改验证码步骤的间距 */
+    .step2-active {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .step2-active .form-group {
+        margin-bottom: 30px;
+    }
+
+    #verificationForm button.button-secondary {
+        margin-top: 8px;
+    }
+
+    #verificationForm .info-footer {
+        margin-top: auto;
+        padding-top: 40px;
+        margin-bottom: 0;
+    }
+
+    /* 添加主题切换按钮样式 */
+    .theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 1000;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .theme-toggle .icon {
+        font-size: 20px;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    [data-theme="dark"] .theme-toggle {
+        background: rgba(30, 30, 30, 0.6);
+        border-color: rgba(80, 80, 80, 0.3);
+    }
+
+    [data-theme="dark"] .theme-toggle .icon {
+        color: #FFD700; /* 深色模式下的图标颜色 */
+    }
+
+    /* 添加主题切换动画 */
+    .button, input, .message {
+        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* 深色模式下的特定调整 */
+    [data-theme="dark"] .message.error {
+        background: rgba(239, 68, 68, 0.2);
+    }
+
+    [data-theme="dark"] .message.success {
+        background: rgba(16, 185, 129, 0.2);
+    }
+
+    [data-theme="dark"] .password-toggle {
+        color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .resend-code {
+        color: #5e9eff;
+    }
+
+    [data-theme="dark"] .resend-code:hover {
+        color: #7fb2ff;
+    }
+
+    [data-theme="dark"] .resend-code.disabled {
+        color: #4a4a4c;
+    }
+
+    [data-theme="dark"] .step-indicator.step2::before {
+        background-image: linear-gradient(to right, var(--primary-color) 50%, var(--step-inactive) 50%);
+    }
+
+    [data-theme="dark"] .verification-footer a,
+    [data-theme="dark"] .info-footer a {
+        color: #5e9eff;
+    }
+
+    [data-theme="dark"] .login-link a {
+        color: #5e9eff;
+    }
+
+    [data-theme="dark"] .login-link a:hover {
+        color: #7fb2ff;
+    }
+
+    /* 适配验证码步骤 */
+    [data-theme="dark"] #verificationForm p {
+        color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .verification-footer,
+    [data-theme="dark"] .info-footer {
+        color: #a0a0a0;
+    }
+
+    /* 深色模式下输入框样式增强 */
+    [data-theme="dark"] .form-group input {
+        border-color: var(--border-color);
+        box-shadow: 0 0 0 1px rgba(80, 80, 95, 0.3);
+    }
+
+    [data-theme="dark"] .form-group input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3), 0 0 0 1px var(--primary-color);
+    }
+
+    [data-theme="dark"] .form-group input:hover:not(:focus) {
+        border-color: #4d4d52;
+        box-shadow: 0 0 0 1px rgba(100, 100, 120, 0.4);
+    }
+
+    /* 模态窗口样式 */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+        z-index: 2000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s;
+    }
+
+    .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .modal-container {
+        background: var(--card-bg);
+        border-radius: 16px;
+        width: 90%;
+        max-width: 600px;
+        max-height: 80vh;
+        overflow-y: auto;
+        padding: 24px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        position: relative;
+        transform: translateY(20px);
+        transition: all 0.3s;
+    }
+
+    .modal-overlay.active .modal-container {
+        transform: translateY(0);
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-header h2 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text-color);
+    }
+
+    .modal-close {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 24px;
+        color: var(--text-color);
+        opacity: 0.6;
+        transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+        opacity: 1;
+    }
+
+    .modal-content {
+        color: var(--text-color);
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .modal-content h3 {
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+
+    .modal-content p {
+        margin-bottom: 16px;
+    }
+
+    .modal-content ul {
+        padding-left: 20px;
+        margin-bottom: 16px;
+    }
+
+    .modal-content ul li {
+        margin-bottom: 8px;
+    }
+
+    /* 自定义滚动条 */
+    .modal-container::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .modal-container::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .modal-container::-webkit-scrollbar-thumb {
+        background-color: rgba(100, 100, 100, 0.3);
+        border-radius: 3px;
+    }
+
+    [data-theme="dark"] .modal-container::-webkit-scrollbar-thumb {
+        background-color: rgba(150, 150, 150, 0.3);
+    }
+
+    /* 协议链接样式 */
+    .agreement-text {
+        text-align: center;
+        margin-top: 16px;
+        font-size: 12px;
+        color: var(--text-color);
+        opacity: 0.8;
+    }
+
+    .agreement-text a {
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .agreement-text a:hover {
+        color: var(--primary-hover);
+        text-decoration: underline;
+    }
+
+    [data-theme="dark"] .agreement-text a {
+        color: #5e9eff;
+    }
+
+    [data-theme="dark"] .agreement-text a:hover {
+        color: #7fb2ff;
+    }
+
+    /* 生成按钮样式 */
+    .generate-button {
+        padding: 0 15px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        min-width: 80px;
+    }
+
+    .generate-button i {
+        font-size: 16px;
+        margin-right: -3px; /* 使图标与文字之间的间距减少3px，文字向左移动 */
+    }
+
+    .generate-button:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+    }
+
+    .generate-button:active {
+        transform: translateY(0);
+    }
+
+    /* 按钮加载状态 */
+    .generate-button.loading {
+        opacity: 0.7;
+        cursor: wait;
+    }
+
+    .generate-button.loading i {
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    [data-theme="dark"] .generate-button {
+        background: var(--primary-color);
+    }
+
+    [data-theme="dark"] .generate-button:hover {
+        background: var(--primary-hover);
+    }
+
+    /* 添加图形验证码相关样式 */
+    .captcha-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+    }
+    
+    .captcha-image {
+        width: 100px;
+        height: 40px;
+        background-color: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Courier New', monospace;
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        letter-spacing: 2px;
+        cursor: pointer;
+        user-select: none;
+        border-radius: 4px;
+    }
+    
+    [data-theme='dark'] .captcha-image {
+        background-color: #2a2a2a;
+        color: #ddd;
+    }
+
+    /* 滑动验证码样式改进 */
+    .slider-captcha-container {
+        margin-top: 15px;
+        width: 100%;
+        user-select: none;
+    }
+    
+    .slider-captcha-track {
+        position: relative;
+        background-color: #f5f5f5;
+        height: 38px;
+        border-radius: 20px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    
+    [data-theme="dark"] .slider-captcha-track {
+        background-color: #2a2a2a;
+        border-color: #444;
+    }
+    
+    .slider-captcha-text {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        font-size: 13px;
+        color: #888;
+        z-index: 1;
+        /* 确保文字垂直居中 */
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    [data-theme="dark"] .slider-captcha-text {
+        color: #aaa;
+    }
+    
+    .slider-captcha-track-inner {
+        position: absolute;
+        height: 100%;
+        background: rgba(var(--primary-color-rgb), 0.2);
+        border-radius: 20px;
+        width: 0;
+        /* 移除transition属性，防止延迟 */
+        will-change: width;
+        pointer-events: none;
+    }
+    
+    [data-theme="dark"] .slider-captcha-track-inner {
+        background: rgba(var(--primary-color-rgb), 0.3);
+    }
+    
+    .slider-captcha-thumb {
+        position: absolute;
+        width: 46px;
+        height: 38px;
+        background: var(--primary-color);
+        border-radius: 20px;
+        color: white;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        z-index: 2;
+        transform: translateY(-1px);
+        transition: background-color 0.3s;
+        touch-action: none;
+        /* 添加优化属性 */
+        will-change: left;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+    
+    .slider-captcha-thumb i {
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+    }
+    
+    .slider-captcha-thumb:hover {
+        background: var(--primary-hover);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+        transform: translateY(-2px);
+    }
+
+    .slider-captcha-thumb:active {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .slider-captcha-success .slider-captcha-text {
+        color: var(--success-color);
+    }
+    
+    .slider-captcha-success .slider-captcha-track-inner {
+        background: rgba(var(--success-color-rgb), 0.2);
+    }
+    
+    [data-theme="dark"] .slider-captcha-success .slider-captcha-track-inner {
+        background: rgba(var(--success-color-rgb), 0.3);
+    }
+    
+    .slider-captcha-success .slider-captcha-thumb {
+        background: var(--success-color);
+    }
+    
+    .slider-captcha-success .slider-captcha-thumb i {
+        transform: rotate(0deg);
+        font-size: 18px; /* 调整为与普通状态一致的大小 */
+        animation: successCheck 0.5s forwards;
+        margin: 0;
+        padding: 0;
+    }
+    
+    @keyframes successCheck {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+    }
+    
+    .slider-captcha-success .slider-captcha-text {
+        color: var(--success-color);
+        font-weight: 600;
+        /* 确保成功状态的文字也能正确对齐 */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+    
+    .captcha-canvas {
+        width: 100%;
+        height: 100%;
+        border-radius: 4px;
+    }
+
+    /* 添加图标样式 */
+    i {
+        line-height: 0;
+    }
+    
+    .form-group label i {
+        margin-right: 8px;
+        font-size: 16px;
+        color: var(--primary-color);
+        position: relative;
+        top: -1px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 0;
+    }
+
+    .button i {
+        margin-right: 8px;
+        font-size: 18px;
+        position: relative;
+        top: -1px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 0;
+    }
+
+    .login-link a i {
+        margin-right: 8px;
+        font-size: 14px;
+        position: relative;
+        top: -1px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 0;
+    }
+
+    /* 密码切换图标样式 */
+    .password-toggle i {
+        font-size: 18px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        vertical-align: -0.125em;
+    }
+    
+    /* 滑动验证码图标样式 */
+    .slider-captcha-thumb i {
+        font-size: 20px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+    }
+
+    /* 主题切换按钮图标 */
+    .theme-toggle .icon i {
+        font-size: 20px;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    /* 深色模式下的图标颜色调整 */
+    [data-theme="dark"] .form-group label i {
+        color: #5e9eff;
+    }
+
+    [data-theme="dark"] .theme-toggle .icon i {
+        color: #FFD700; /* 深色模式下的图标颜色 */
+    }
+
+    .header h1 i {
+        margin-right: 8px;
+        font-size: 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 0;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+</style>
+
+<div class="container">
+    <div class="card">
+        <div class="header">
+            <h1><i class="ri-user-add-line"></i>注册新账户</h1>
+            <p>数据分析系统</p>
+        </div>
+        
+        <div class="step-indicator" id="stepIndicator">
+            <div class="step active" id="step1"></div>
+            <div class="step" id="step2"></div>
+        </div>
+        
+        <!-- 注册表单第一步：基本信息 -->
+        <form id="registerForm" class="form-animate-in active">
+            <div class="form-group">
+                <label for="username"><i class="ri-user-line"></i>用户名</label>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="username" name="username" placeholder="请输入3-20个字符的用户名" maxlength="20" required style="flex: 1;">
+                    <button type="button" id="generateUsername" class="generate-button" title="生成随机用户名">
+                        <i class="ri-refresh-line"></i> 生成
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email"><i class="ri-mail-line"></i>邮箱</label>
+                <input type="email" id="email" name="email" placeholder="请输入您的邮箱地址" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password"><i class="ri-lock-password-line"></i>密码</label>
+                <input type="password" id="password" name="password" placeholder="请设置您的密码" required>
+                <button type="button" class="password-toggle" onclick="togglePassword('password')" title="显示/隐藏密码">
+                    <i class="ri-eye-line"></i>
+                </button>
+                <div class="password-strength">
+                    <div id="strengthBar" class="password-strength-bar"></div>
+                </div>
+                <div id="passwordTips" class="password-tips">
+                    <span class="icon" id="strengthIconSmall"></span>
+                    <span class="text" id="tipsText">密码至少包含6个字符</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword"><i class="ri-check-line"></i>确认密码</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="请再次输入密码" required>
+                <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')" title="显示/隐藏密码">
+                    <i class="ri-eye-line"></i>
+                </button>
+            </div>
+            
+            <div class="form-group">
+                <label for="image-captcha"><i class="ri-shield-check-line"></i>图形验证码</label>
+                <div class="captcha-container">
+                    <input type="text" id="image-captcha" placeholder="请输入验证码" required>
+                    <div id="captcha-image" class="captcha-image" title="点击刷新验证码">
+                        <canvas id="captcha-canvas" class="captcha-canvas"></canvas>
+                    </div>
+                </div>
+                <div id="slider-captcha" class="slider-captcha-container">
+                    <div class="slider-captcha-track">
+                        <div class="slider-captcha-text">请向右滑动滑块完成验证</div>
+                        <div class="slider-captcha-track-inner"></div>
+                        <div class="slider-captcha-thumb"><i class="ri-arrow-right-line"></i></div>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="button"><i class="ri-arrow-right-line"></i>下一步</button>
+            
+            <div id="message" class="message"></div>
+            
+            <div class="login-link">
+                <a href="/login"><i class="ri-login-box-line"></i>已有账户？点击登录</a>
+            </div>
+
+            <div class="agreement-text">
+                注册即代表已阅读并同意我们的 <a href="javascript:void(0)" id="userAgreementLink">用户协议</a> 与 <a href="javascript:void(0)" id="privacyPolicyLink">隐私政策</a>
+            </div>
+        </form>
+        
+        <!-- 注册表单第二步：验证码验证 -->
+        <form id="verificationForm" class="form-animate-in" style="display: none;">
+            <div class="form-group">
+                <label for="verificationCode"><i class="ri-key-2-line"></i>验证码</label>
+                <p style="font-size: 14px; color: var(--text-color); margin-top: -5px; margin-bottom: 12px; opacity: 0.7;">
+                    验证码已发送至您的邮箱，请查收并输入
+                </p>
+                <div class="verification-code-container">
+                    <input type="text" id="verificationCode" name="verificationCode" placeholder="输入验证码" required>
+                </div>
+                <div class="resend-container" style="margin-top: 10px; text-align: right;">
+                    <span id="countdown" class="countdown" style="display: none;">60s后可重新发送</span>
+                    <a href="#" id="resendCode" class="resend-code">重新发送验证码</a>
+                </div>
+            </div>
+            
+            <button type="submit" class="button"><i class="ri-check-line"></i>完成注册</button>
+            
+            <button type="button" class="button button-secondary" id="backButton" style="margin-top: 8px;">
+                <i class="ri-arrow-left-line"></i>返回修改
+            </button>
+            
+            <div id="verificationMessage" class="message"></div>
+            
+            <!-- 修改验证码表单底部的静态内容 -->
+            <div style="margin-top: auto; padding-top: 40px; text-align: center; color: var(--text-color); opacity: 0.6; font-size: 14px;" class="info-footer">
+                <p>验证完成后，您将自动登录系统</p>
+                <p style="margin-top: 5px;">如有问题请联系 <a href="mailto:support@example.com" style="color: var(--primary-color); text-decoration: none;">管理员</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 发送验证码加载指示器 -->
+<div class="sending-indicator" id="sendingIndicator">
+    <div class="spinner"></div>
+</div>
+
+<!-- 添加主题切换按钮 -->
+<div class="theme-toggle" id="themeToggle">
+    <div class="icon"><i class="ri-sun-line"></i></div>
+</div>
+
+<!-- 添加模态窗口 -->
+<!-- 用户协议模态窗口 -->
+<div class="modal-overlay" id="userAgreementModal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2><i class="ri-file-text-line"></i> 用户协议</h2>
+            <button class="modal-close" data-close-modal>&times;</button>
+        </div>
+        <div class="modal-content">
+            <div class="agreement-intro" style="background: rgba(var(--primary-color-rgb), 0.05); padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid var(--primary-color); display: flex; align-items: center;">
+                <p style="font-weight: 500; margin-bottom: 10px;">欢迎使用我们的高级数据分析系统。本协议详细规定了您使用本服务的权利和限制。请在注册和使用本系统前，仔细阅读以下全部内容。注册或使用本系统即表示您已充分理解并同意受本协议约束。</p>
+            </div>
+            
+            <h3><i class="ri-service-line"></i> 1. 服务说明</h3>
+            <p>本系统("服务")是一个专业的数据分析平台，提供以下核心功能：</p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li><strong>多文件分析：</strong>支持多个数据文件的比较分析，查找差异和共性，适用于跨期间、跨渠道数据对比。</li>
+                <li><strong>单文件分析：</strong>深入分析单个文件的数据模式、趋势和异常值，提供详细图表和报告。</li>
+                <li><strong>AI智能分析：</strong>利用先进的机器学习算法，自动发现数据中的重要洞察和预测趋势。</li>
+                <li><strong>销售趋势分析：</strong>专为销售数据设计的分析工具，可视化销售模式、季节性波动和增长机会。</li>
+                <li><strong>数据侦探模式：</strong>交互式学习和分析环境，帮助用户培养数据分析技能和解决实际业务问题。</li>
+            </ul>
+            
+            <h3><i class="ri-shield-user-line"></i> 2. 用户账户</h3>
+            <p>您需要创建账户才能使用本系统的完整功能。关于账户，您需了解并同意：</p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li>您必须提供准确、完整和最新的注册信息。</li>
+                <li>您有责任保护账户密码安全，并对所有使用您账户进行的活动负全部责任。</li>
+                <li>若发现任何未授权使用您账户的情况，您应立即通知我们。</li>
+                <li>我们保留在不通知的情况下删除或回收长期不活跃账户的权利。</li>
+                <li>用户不得创建多个账户规避系统限制或服务费用。</li>
+            </ul>
+            
+            <h3><i class="ri-file-upload-line"></i> 3. 数据上传与处理</h3>
+            <p>关于您上传到本系统的数据，您确认并同意：</p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li>您拥有上传数据的合法权利，且上传不违反任何适用法律或第三方权利。</li>
+                <li>我们将采取商业合理措施保护您的数据安全，但不对数据丢失负责。</li>
+                <li>您授权我们处理和分析您上传的数据，以提供服务功能。</li>
+                <li>当使用AI智能分析功能时，系统可能会保留匿名化数据以改进算法性能。</li>
+                <li>您应当定期备份重要数据，我们不对任何数据丢失承担责任。</li>
+            </ul>
+            
+            <h3><i class="ri-error-warning-line"></i> 4. 用户行为规范</h3>
+            <p>使用本系统时，您同意不会：</p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li>上传任何非法、侵权、骚扰、歧视、威胁或违反公共道德的内容。</li>
+                <li>上传含有病毒、恶意代码或旨在破坏系统功能的数据。</li>
+                <li>进行任何可能损害系统安全的行为，包括未经授权的访问、扫描或测试系统漏洞。</li>
+                <li>使用自动化工具或脚本过度请求服务，导致系统负担过重。</li>
+                <li>干扰其他用户正常使用系统或企图获取其他用户的数据。</li>
+                <li>规避系统的任何技术限制或付费功能的收费机制。</li>
+                <li>使用本系统从事任何可能违反法律法规的活动。</li>
+            </ul>
+            
+            <h3><i class="ri-copyright-line"></i> 5. 知识产权</h3>
+            <p>关于知识产权，您需了解：</p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li>本系统及其内容（包括但不限于文本、图像、软件、算法、分析方法等）的所有知识产权归我们所有。</li>
+                <li>您上传的数据内容所有权仍归您所有，但您授予我们全球性、非排他性、免费的许可，以便我们存储、处理和分析这些数据。</li>
+                <li>系统生成的分析结果和报告的展示形式归我们所有，但基于您数据的具体分析结论归您所有。</li>
+                <li>使用数据侦探模式产生的解决方案和方法可能会被匿名收集以改进系统功能。</li>
+                <li>您不得复制、修改、分发或逆向工程我们的系统或其组件。</li>
+            </ul>
+            
+            <h3><i class="ri-scales-line"></i> 6. 责任限制</h3>
+            <p>关于我们的责任范围，您需了解：</p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li>我们努力确保系统的可用性和数据的准确性，但不对任何中断、错误或分析结果的准确性做出保证。</li>
+                <li>对于使用本系统导致的任何直接或间接损失，包括但不限于业务决策损失、数据丢失或利润损失，我们不承担责任。</li>
+                <li>AI智能分析和销售趋势分析功能提供的预测和建议仅供参考，不构成专业建议，您应自行评估和判断。</li>
+                <li>数据侦探模式提供的教学内容和案例研究仅用于学习目的，不保证适用于所有业务场景。</li>
+                <!-- <li>在任何情况下，我们的赔偿责任总额不超过您在过去12个月内为本服务支付的费用总额。</li> -->
+            </ul>
+            
+            <h3><i class="ri-global-line"></i> 7. 服务变更与终止</h3>
+            <p>关于服务的变更和终止：</p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li>我们保留随时修改、暂停或终止任何服务功能的权利，包括多文件分析、AI智能分析等任何功能。</li>
+                <li>我们会尽合理努力提前通知重大变更，但紧急情况除外。</li>
+                <li>如您违反本协议条款，我们可能会限制、暂停或终止您的账户访问权限。</li>
+                <li>服务终止后，我们可能会在合理期限内保留您的数据，除非您明确要求删除。</li>
+            </ul>
+            
+            <h3><i class="ri-file-paper-2-line"></i> 8. 协议修改</h3>
+            <p>关于本协议的更新：</p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li>我们保留随时修改本协议的权利，修改后的协议将在网站上公布。</li>
+                <li>对于重大变更，我们将通过合理方式通知您。</li>
+                <li>继续使用本系统即表示您接受修改后的协议。</li>
+                <li>如您不同意修改后的协议，应立即停止使用本系统。</li>
+            </ul>
+            
+            <h3><i class="ri-customer-service-2-line"></i> 9. 联系我们</h3>
+            <p>如对本协议有任何疑问或建议，请通过系统内的反馈功能或发送邮件至admin@example.com与我们联系。</p>
+            
+            <div class="agreement-conclusion" style="background: rgba(var(--primary-color-rgb), 0.05); padding: 15px; border-radius: 8px; margin-top: 20px; border-left: 4px solid var(--primary-color);">
+                <p style="font-weight: 500;">最后更新日期：2025年4月15日</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 隐私政策模态窗口 -->
+<div class="modal-overlay" id="privacyPolicyModal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2><i class="ri-lock-line"></i> 隐私政策</h2>
+            <button class="modal-close" data-close-modal>&times;</button>
+        </div>
+        <div class="modal-content">
+            <div class="policy-intro" style="background: rgba(var(--primary-color-rgb), 0.05); padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid var(--primary-color);">
+                <p style="font-weight: 500; margin-bottom: 10px;">我们高度重视您的隐私保护。本隐私政策详细说明了我们如何收集、使用、存储、共享您的信息，以及您享有的相关权利。请您在使用我们的服务前仔细阅读本政策。</p>
+            </div>
+            
+            <h3><i class="ri-information-line"></i> 1. 信息收集</h3>
+            <p>我们收集以下类型的信息：</p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li><strong>账户信息：</strong>用户名、电子邮箱地址、密码加密信息等您在注册和使用过程中提供的信息。</li>
+                <li><strong>分析数据：</strong>您上传到系统进行分析的文件和数据内容，包括但不限于：
+                    <ul style="margin-left: 20px; margin-top: 5px;">
+                        <li>用于多文件分析的比较数据集</li>
+                        <li>用于单文件分析的数据文件</li>
+                        <li>提交给AI智能分析功能处理的数据</li>
+                        <li>销售趋势分析中使用的销售记录和指标</li>
+                        <li>数据侦探模式中的练习数据和解答</li>
+                    </ul>
+                </li>
+                <li><strong>使用数据：</strong>您使用本系统的方式和行为数据，包括：
+                    <ul style="margin-left: 20px; margin-top: 5px;">
+                        <li>登录记录、功能使用统计、分析任务历史</li>
+                        <li>各功能模块的使用频率和时长</li>
+                        <li>数据侦探模式的进度和成绩</li>
+                        <li>您与系统交互的模式和偏好设置</li>
+                    </ul>
+                </li>
+                <li><strong>设备和技术信息：</strong>IP地址、浏览器类型、设备信息、操作系统、网络信息、屏幕分辨率和色彩深度等。</li>
+                <li><strong>位置信息：</strong>基于IP地址的大致位置信息（国家/地区级别）。</li>
+            </ul>
+            
+            <h3><i class="ri-bookmark-line"></i> 2. 信息使用</h3>
+            <p>我们使用收集的信息用于以下目的：</p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li><strong>提供核心服务：</strong>
+                    <ul style="margin-left: 20px; margin-top: 5px;">
+                        <li>执行多文件分析和单文件分析任务</li>
+                        <li>提供AI智能分析结果和建议</li>
+                        <li>生成销售趋势分析报告和可视化图表</li>
+                        <li>支持数据侦探模式的教学和评估功能</li>
+                    </ul>
+                </li>
+                <li><strong>系统维护与改进：</strong>
+                    <ul style="margin-left: 20px; margin-top: 5px;">
+                        <li>监控系统性能和可用性</li>
+                        <li>识别并修复技术问题和漏洞</li>
+                        <li>分析用户行为以优化界面和功能</li>
+                        <li>改进AI算法和分析模型的准确性</li>
+                    </ul>
+                </li>
+                <li><strong>个性化体验：</strong>根据您的使用历史和偏好，提供定制化的分析模板、报告格式和功能建议。</li>
+                <li><strong>通知和更新：</strong>发送服务公告、安全警报、功能更新和系统维护通知。</li>
+                <li><strong>安全保障：</strong>检测和预防欺诈行为、未授权访问和其他潜在安全威胁。</li>
+                <li><strong>性能分析：</strong>收集匿名使用统计数据，帮助我们了解用户如何使用各分析功能，以便进行针对性改进。</li>
+            </ul>
+            
+            <h3><i class="ri-shield-check-line"></i> 3. 数据安全与保护</h3>
+            <p>我们采取以下措施保护您的信息：</p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li><strong>技术保障：</strong>采用加密传输(SSL/TLS)、安全存储、访问控制和防火墙等技术手段保护您的数据免受未授权访问。</li>
+                <li><strong>数据处理规范：</strong>对不同分析模式的数据采取不同级别的保护措施：
+                    <ul style="margin-left: 20px; margin-top: 5px;">
+                        <li>多文件和单文件分析：数据仅在分析期间处理，完成后可选择性缓存或立即删除</li>
+                        <li>AI智能分析：可能保留匿名化数据以提升模型性能</li>
+                        <li>销售趋势分析：对敏感商业数据实施额外的访问控制</li>
+                        <li>数据侦探模式：练习数据与真实用户数据严格隔离</li>
+                    </ul>
+                </li>
+                <li><strong>内部控制：</strong>严格的员工访问控制，定期安全审计，以及数据泄露应急响应计划。</li>
+                <li><strong>数据留存：</strong>仅在必要期限内保留您的数据，并建立明确的数据删除机制。</li>
+                <li><strong>合规认证：</strong>我们的数据处理实践符合行业标准安全认证要求。</li>
+            </ul>
+            
+            <h3><i class="ri-share-line"></i> 4. 信息共享</h3>
+            <p>我们高度重视您的数据隐私，原则上不会与第三方共享您的个人信息。但在以下情况下可能会共享您的信息：</p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li><strong>经您授权：</strong>根据您的明确同意进行的信息共享。</li>
+                <li><strong>服务提供商：</strong>与帮助我们提供服务的第三方合作伙伴共享必要信息，如云存储、数据处理和分析服务提供商。这些合作伙伴需遵守保密义务。</li>
+                <li><strong>法律要求：</strong>应法律法规要求、法院命令或政府机构合法要求而必须披露信息。</li>
+                <li><strong>安全需要：</strong>为保护我们、您或他人的权利、财产或安全而必须共享信息。</li>
+                <li><strong>业务转让：</strong>如果我们的业务被收购、合并或资产转让，您的信息可能作为资产的一部分被转让。</li>
+            </ul>
+            <p>我们承诺不会出售您的个人信息。对于各分析功能：</p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li>多文件分析和单文件分析的原始数据绝不会共享给第三方。</li>
+                <li>AI智能分析可能使用匿名化数据进行模型训练。</li>
+                <li>销售趋势分析的商业敏感数据受严格的访问控制保护。</li>
+                <li>数据侦探模式的学习记录仅用于内部教学评估。</li>
+            </ul>
+            
+            <h3><i class="ri-cookie-line"></i> 5. Cookie和类似技术</h3>
+            <p>我们使用Cookie和类似技术：</p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li><strong>功能Cookie：</strong>保存您的偏好设置、登录状态和主题选择等。</li>
+                <li><strong>分析Cookie：</strong>帮助我们了解用户如何使用我们的系统，包括不同分析模式的使用情况。</li>
+                <li><strong>性能Cookie：</strong>帮助提高系统的响应速度和运行效率。</li>
+                <li><strong>安全Cookie：</strong>用于安全目的，如检测欺诈行为和保护用户账户。</li>
+            </ul>
+            <p>您可以通过浏览器设置管理Cookie偏好，但这可能会影响某些功能的可用性，特别是会影响个性化的分析模板和报告格式。</p>
+            
+            <h3><i class="ri-user-settings-line"></i> 6. 您的权利和选择</h3>
+            <p>作为我们服务的用户，您享有以下权利：</p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li><strong>访问权：</strong>您可以请求访问我们持有的您的个人信息。</li>
+                <li><strong>更正权：</strong>如果您认为我们持有的关于您的信息不准确，您可以要求更正。</li>
+                <li><strong>删除权：</strong>您可以要求删除您的账户和相关个人数据。</li>
+                <li><strong>处理限制权：</strong>在某些情况下，您可以要求限制我们处理您的数据的方式。</li>
+                <li><strong>数据可携权：</strong>您可以请求以结构化、常用和机器可读的格式获取您的数据。</li>
+                <li><strong>异议权：</strong>您有权反对我们处理您的个人数据。</li>
+            </ul>
+            <p>针对不同功能模块，您可以进行以下具体选择：</p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li>控制多文件和单文件分析数据的留存时间</li>
+                <li>选择是否允许AI智能分析使用您的匿名数据改进算法</li>
+                <li>管理销售趋势分析的数据共享设置</li>
+                <li>决定数据侦探模式中的学习记录保存期限</li>
+            </ul>
+            
+            <h3><i class="ri-global-line"></i> 7. 国际数据传输</h3>
+            <p>我们可能在全球范围内存储和处理您的信息。如果您所在国家/地区的数据保护法律与我们服务器所在地的法律存在差异，我们将采取适当措施保护您的数据，并确保任何国际数据传输符合适用的数据保护法律。</p>
+            
+            <h3><i class="ri-user-smile-line"></i> 8. 儿童隐私</h3>
+            <p>我们的服务不面向13岁以下儿童。如果我们发现已收集了13岁以下儿童的个人信息，我们将采取措施尽快删除此类信息。如果您认为我们可能持有关于13岁以下儿童的信息，请联系我们。</p>
+            
+            <h3><i class="ri-file-paper-2-line"></i> 9. 隐私政策更新</h3>
+            <p>我们可能会不时更新本隐私政策，以反映我们实践的变化或法律要求的更新：</p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li>我们将在网站上发布更新后的隐私政策，并更新生效日期。</li>
+                <li>对于重大变更，我们将通过电子邮件或网站通知等方式提前通知您。</li>
+                <li>继续使用我们的服务将被视为您同意修订后的隐私政策。</li>
+            </ul>
+            
+            <h3><i class="ri-customer-service-2-line"></i> 10. 联系我们</h3>
+            <p>如果您对本隐私政策或我们的数据处理实践有任何疑问、意见或投诉，请通过以下方式联系我们：</p>
+            <p style="margin-left: 20px; line-height: 1.6;">电子邮件：admin@example.com</p>
+            <p>我们将在合理时间内回应您的请求。</p>
+            
+            <div class="policy-conclusion" style="background: rgba(var(--primary-color-rgb), 0.05); padding: 15px; border-radius: 8px; margin-top: 20px; border-left: 4px solid var(--primary-color); display: flex; align-items: center;">
+                <p style="font-weight: 500;">最后更新日期：2025年4月15日</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const registerForm = document.getElementById('registerForm');
+    const verificationForm = document.getElementById('verificationForm');
+    const message = document.getElementById('message');
+    const verificationMessage = document.getElementById('verificationMessage');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
+    const strengthBar = document.getElementById('strengthBar');
+    const passwordTips = document.getElementById('passwordTips');
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const backButton = document.getElementById('backButton');
+    const resendCodeBtn = document.getElementById('resendCode');
+    const countdownSpan = document.getElementById('countdown');
+    const generateUsernameBtn = document.getElementById('generateUsername');
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('.icon i');
+
+    // 存储用户信息，用于后续验证
+    let userData = {};
+    let countdownTimer;
+    
+    // 当前验证码值
+    let currentCaptcha = '';
+    // 滑动验证标志
+    let sliderVerified = false;
+    
+    // 生成Canvas图形验证码
+    function generateCaptcha() {
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+        currentCaptcha = '';
+        for (let i = 0; i < 4; i++) {
+            currentCaptcha += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        
+        const canvas = document.getElementById('captcha-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // 设置Canvas大小
+        canvas.width = 100;
+        canvas.height = 40;
+        
+        // 获取当前主题，判断是否为深色模式
+        const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+        
+        // 设置背景色
+        ctx.fillStyle = isDarkMode ? '#2a2a2a' : '#f0f0f0';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // 绘制干扰线
+        for (let i = 0; i < 4; i++) {
+            ctx.strokeStyle = getRandomColor(isDarkMode);
+            ctx.beginPath();
+            ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+            ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+            ctx.lineWidth = Math.random() + 1;
+            ctx.stroke();
+        }
+        
+        // 绘制噪点
+        for (let i = 0; i < 50; i++) {
+            ctx.fillStyle = getRandomColor(isDarkMode);
+            ctx.beginPath();
+            ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        
+        // 设置字体和颜色
+        ctx.font = 'bold 22px Arial';
+        
+        // 绘制每个字符，并添加随机效果
+        for (let i = 0; i < currentCaptcha.length; i++) {
+            const char = currentCaptcha.charAt(i);
+            // 随机旋转角度
+            const rotate = (Math.random() - 0.5) * 0.3;
+            // 随机文字颜色
+            ctx.fillStyle = getTextColor(isDarkMode);
+            
+            ctx.save();
+            // 将绘图原点移到字符的预计位置
+            ctx.translate(15 + i * 20, 25);
+            // 旋转
+            ctx.rotate(rotate);
+            // 随机缩放
+            const scale = 0.8 + Math.random() * 0.4;
+            ctx.scale(scale, scale);
+            // 绘制文字
+            ctx.fillText(char, 0, 0);
+            // 恢复之前的绘图状态
+            ctx.restore();
+        }
+        
+        // 清空输入框
+        document.getElementById('image-captcha').value = '';
+        
+        // 重置滑动验证
+        resetSlider();
+    }
+    
+    // 获取随机颜色
+    function getRandomColor(isDarkMode) {
+        if (isDarkMode) {
+            // 深色模式使用较亮的颜色
+            return `hsl(${Math.random() * 360}, ${30 + Math.random() * 30}%, ${60 + Math.random() * 20}%)`;
+        } else {
+            // 浅色模式使用较暗的颜色
+            return `hsl(${Math.random() * 360}, ${50 + Math.random() * 30}%, ${30 + Math.random() * 20}%)`;
+        }
+    }
+    
+    // 获取文字颜色，确保在不同主题下都有良好的可读性
+    function getTextColor(isDarkMode) {
+        if (isDarkMode) {
+            // 深色模式使用亮色
+            const hue = Math.random() * 360;
+            return `hsl(${hue}, ${70 + Math.random() * 30}%, ${70 + Math.random() * 20}%)`;
+        } else {
+            // 浅色模式使用深色
+            const hue = Math.random() * 360;
+            return `hsl(${hue}, ${70 + Math.random() * 30}%, ${20 + Math.random() * 20}%)`;
+        }
+    }
+    
+    // 初始化滑动验证
+    function initSlider() {
+        const slider = document.querySelector('.slider-captcha-thumb');
+        const sliderTrack = document.querySelector('.slider-captcha-track');
+        const trackInner = document.querySelector('.slider-captcha-track-inner');
+        const sliderContainer = document.querySelector('.slider-captcha-container');
+        
+        let isDragging = false;
+        let startX = 0;
+        let currentX = 0;
+        
+        // 鼠标/触摸事件处理
+        function handleStart(e) {
+            if (sliderVerified) return;
+            
+            isDragging = true;
+            startX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+            currentX = parseInt(slider.style.left || '0');
+            
+            // 移除任何过渡效果，确保实时更新
+            slider.style.transition = 'none';
+            trackInner.style.transition = 'none';
+            
+            // 添加事件监听
+            document.addEventListener('mousemove', handleMove);
+            document.addEventListener('touchmove', handleMove, { passive: false });
+            document.addEventListener('mouseup', handleEnd);
+            document.addEventListener('touchend', handleEnd);
+            
+            // 添加活动状态类
+            slider.classList.add('active');
+            
+            // 防止默认事件
+            e.preventDefault();
+        }
+        
+        function handleMove(e) {
+            if (!isDragging) return;
+            
+            // 防止页面滚动
+            e.preventDefault();
+            
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+            let moveX = currentX + (clientX - startX);
+            
+            // 限制移动范围
+            const maxX = sliderTrack.clientWidth - slider.clientWidth;
+            moveX = Math.max(0, Math.min(moveX, maxX));
+            
+            // 立即更新滑块和轨道内部元素的位置
+            slider.style.left = moveX + 'px';
+            trackInner.style.width = (moveX + slider.clientWidth / 2) + 'px';
+        }
+        
+        function handleEnd() {
+            if (!isDragging) return;
+            
+            isDragging = false;
+            
+            // 移除事件监听
+            document.removeEventListener('mousemove', handleMove);
+            document.removeEventListener('touchmove', handleMove);
+            document.removeEventListener('mouseup', handleEnd);
+            document.removeEventListener('touchend', handleEnd);
+            
+            // 移除活动状态类
+            slider.classList.remove('active');
+            
+            // 检查是否滑到最右侧
+            const maxX = sliderTrack.clientWidth - slider.clientWidth;
+            const currentLeft = parseInt(slider.style.left || '0');
+            
+            if (currentLeft >= maxX * 0.95) { // 允许一点点误差
+                // 验证成功
+                sliderVerified = true;
+                
+                // 添加过渡效果使最终位置平滑
+                slider.style.transition = 'left 0.2s';
+                trackInner.style.transition = 'width 0.2s';
+                
+                slider.style.left = maxX + 'px';
+                trackInner.style.width = sliderTrack.clientWidth + 'px';
+                
+                // 更新提示文本
+                document.querySelector('.slider-captcha-text').textContent = '验证成功';
+                
+                // 更新图标为对勾，并准备动画
+                const sliderIcon = slider.querySelector('i');
+                
+                // 重置动画状态
+                sliderIcon.style.animation = 'none';
+                void sliderIcon.offsetWidth; // 触发重绘
+                
+                // 更新图标并应用动画
+                sliderIcon.className = 'ri-check-line';
+                sliderIcon.style.transform = 'none';
+                sliderIcon.style.animation = 'successCheck 0.5s forwards';
+                
+                // 添加成功样式类
+                sliderContainer.classList.add('slider-captcha-success');
+                
+                // 验证成功后移除过渡效果
+                setTimeout(() => {
+                    slider.style.transition = 'none';
+                    trackInner.style.transition = 'none';
+                }, 200);
+            } else {
+                // 验证失败，重置滑块
+                slider.style.transition = 'left 0.3s';
+                trackInner.style.transition = 'width 0.3s';
+                slider.style.left = '0px';
+                trackInner.style.width = '0px';
+                
+                // 重置后移除过渡效果
+                setTimeout(() => {
+                    slider.style.transition = 'none';
+                    trackInner.style.transition = 'none';
+                }, 300);
+            }
+        }
+        
+        // 添加事件监听
+        slider.addEventListener('mousedown', handleStart);
+        slider.addEventListener('touchstart', handleStart, { passive: false });
+    }
+    
+    // 重置滑动验证
+    function resetSlider() {
+        const slider = document.querySelector('.slider-captcha-thumb');
+        const trackInner = document.querySelector('.slider-captcha-track-inner');
+        const sliderContainer = document.querySelector('.slider-captcha-container');
+        const sliderText = document.querySelector('.slider-captcha-text');
+        const sliderIcon = slider.querySelector('i');
+        
+        sliderContainer.classList.remove('slider-captcha-success');
+        
+        // 添加过渡效果使重置动画平滑
+        slider.style.transition = 'left 0.2s';
+        trackInner.style.transition = 'width 0.2s';
+        
+        slider.style.left = '0px';
+        trackInner.style.width = '0px';
+        sliderText.textContent = '请向右滑动滑块完成验证';
+        
+        // 重置图标
+        sliderIcon.className = 'ri-arrow-right-line';
+        sliderIcon.style.transform = 'none'; // 清除可能残留的动画效果
+        sliderIcon.style.animation = 'none';
+        
+        // 强制重绘以确保动画效果重置
+        void sliderIcon.offsetWidth;
+        
+        sliderVerified = false;
+        
+        // 短暂延迟后移除过渡效果，确保下次拖动时没有延迟
+        setTimeout(() => {
+            slider.style.transition = 'none';
+            trackInner.style.transition = 'none';
+        }, 200);
+    }
+    
+    // 初始化验证码
+    generateCaptcha();
+    initSlider();
+    
+    // 点击验证码刷新
+    document.getElementById('captcha-image').addEventListener('click', generateCaptcha);
+    
+    // 监听主题变化，重新生成验证码
+    if (themeToggle) {
+        themeToggle.addEventListener('click', function() {
+            // 延迟一下，等主题切换完成后再生成验证码
+            setTimeout(generateCaptcha, 100);
+        });
+    }
+
+    // 为生成用户名按钮添加点击事件
+    if (generateUsernameBtn) {
+        generateUsernameBtn.addEventListener('click', function() {
+            // 添加加载状态
+            this.classList.add('loading');
+            this.disabled = true;
+            
+            // 调用API生成随机用户名
+            fetch('/api/generate-username')
+                .then(response => response.json())
+                .then(data => {
+                    // 移除加载状态
+                    this.classList.remove('loading');
+                    this.disabled = false;
+                    
+                    if (data.success) {
+                        // 填充用户名输入框
+                        document.getElementById('username').value = data.username;
+                        // 可选：触发一个简短的提示动画
+                        const usernameInput = document.getElementById('username');
+                        usernameInput.style.transition = 'background-color 0.3s';
+                        usernameInput.style.backgroundColor = 'rgba(var(--primary-color-rgb), 0.1)';
+                        setTimeout(() => {
+                            usernameInput.style.backgroundColor = '';
+                        }, 500);
+                    } else {
+                        showMessage('生成用户名失败，请重试', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    this.classList.remove('loading');
+                    this.disabled = false;
+                    showMessage('生成用户名失败，请重试', 'error');
+                });
+        });
+    }
+
+    // 检查密码强度
+    function checkPasswordStrength(password) {
+        let strength = 0;
+        const tips = [];
+
+        // 长度检查（更严格的长度要求）
+        if (password.length < 6) {
+            tips.push('密码至少包含6个字符');
+        } else if (password.length >= 10) {
+            strength += 2;  // 10个字符以上给2分
+        } else {
+            strength += 1;  // 6-9个字符给1分
+        }
+
+        // 包含数字
+        if (/\d/.test(password)) {
+            strength += 1;
+        } else {
+            tips.push('建议包含数字');
+        }
+
+        // 包含小写字母
+        if (/[a-z]/.test(password)) {
+            strength += 1;
+        } else {
+            tips.push('建议包含小写字母');
+        }
+
+        // 包含大写字母
+        if (/[A-Z]/.test(password)) {
+            strength += 1;
+        } else {
+            tips.push('建议包含大写字母');
+        }
+
+        // 包含特殊字符
+        if (/[^A-Za-z0-9]/.test(password)) {
+            strength += 1;
+        } else {
+            tips.push('建议包含特殊字符');
+        }
+
+        // 检查是否是连续的数字或字母
+        if (/^(?:0123456789|1234567890|abcdefgh|qwerty|password|abc123)$/i.test(password)) {
+            strength = Math.max(0, strength - 2);  // 如果是连续字符，降低强度
+            tips.push('不建议使用连续的数字或字母');
+        }
+
+        // 检查重复字符
+        if (/(.)\1{2,}/.test(password)) {
+            strength = Math.max(0, strength - 1);  // 如果包含重复字符，降低强度
+            tips.push('不建议使用重复的字符');
+        }
+
+        return {
+            strength: strength,
+            tips: tips.length > 0 ? tips.join('，') : '密码强度良好'
+        };
+    }
+
+    // 更新密码强度显示
+    password.addEventListener('input', function() {
+        const result = checkPasswordStrength(this.value);
+        strengthBar.className = 'password-strength-bar';
+        const strengthIconSmall = document.getElementById('strengthIconSmall');
+        const tipsText = document.getElementById('tipsText');
+        
+        if (this.value.length === 0) {
+            strengthBar.className = 'password-strength-bar';
+            strengthIconSmall.textContent = '';
+            tipsText.textContent = '密码至少包含6个字符';
+            tipsText.style.color = 'var(--text-color)';
+        } else if (result.strength <= 2) {
+            strengthBar.classList.add('strength-weak');
+            strengthIconSmall.textContent = '❌';
+            tipsText.textContent = `弱：${result.tips}`;
+            tipsText.style.color = 'var(--error-color)';
+        } else if (result.strength <= 4) {
+            strengthBar.classList.add('strength-medium');
+            strengthIconSmall.textContent = '⚠️';
+            tipsText.textContent = `中：${result.tips}`;
+            tipsText.style.color = '#f59e0b';
+        } else {
+            strengthBar.classList.add('strength-strong');
+            strengthIconSmall.textContent = '✅';
+            tipsText.textContent = `强：${result.tips}`;
+            tipsText.style.color = 'var(--success-color)';
+        }
+    });
+
+    // 检查密码匹配
+    confirmPassword.addEventListener('input', function() {
+        if (this.value && this.value !== password.value) {
+            showMessage('两次输入的密码不一致', 'error');
+        }
+    });
+
+    // 第一步表单提交处理
+    registerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const username = document.getElementById('username').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const confirmPwd = document.getElementById('confirmPassword').value;
+        const captchaInput = document.getElementById('image-captcha').value.trim();
+
+        // 验证表单
+        if (!username || !email || !password || !confirmPwd || !captchaInput) {
+            showMessage('请填写所有必需信息', 'error');
+            return;
+        }
+        
+        // 验证图形验证码
+        if (captchaInput.toLowerCase() !== currentCaptcha.toLowerCase()) {
+            showMessage('图形验证码错误', 'error');
+            generateCaptcha(); // 刷新验证码
+            return;
+        }
+
+        if (username.length < 3 || username.length > 20) {
+            showMessage('用户名长度必须在3-20个字符之间', 'error');
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            showMessage('请输入有效的邮箱地址', 'error');
+            return;
+        }
+
+        if (password.length < 6) {
+            showMessage('密码长度不能小于6个字符', 'error');
+            return;
+        }
+
+        if (password !== confirmPwd) {
+            showMessage('两次输入的密码不一致', 'error');
+            return;
+        }
+
+        // 检查密码强度
+        const strengthResult = checkPasswordStrength(password);
+        if (strengthResult.strength <= 2) {
+            showMessage('密码强度太弱，' + strengthResult.tips, 'error');
+            return;
+        }
+
+        // 保存用户数据
+        userData = {
+            username: username,
+            email: email,
+            password: password
+        };
+
+        // 首先检查用户名是否已被注册
+        fetch('/api/check-username', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.exists) {
+                showMessage('该用户名已被注册', 'error');
+                generateCaptcha(); // 刷新验证码
+            } else {
+                // 继续检查邮箱是否已被注册
+                return fetch('/api/check-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email })
+                });
+            }
+        })
+        .then(response => {
+            if (response) { // 确保上一步没有提前返回
+                return response.json();
+            }
+        })
+        .then(data => {
+            if (data) { // 确保有数据
+                if (data.exists) {
+                    showMessage('该邮箱已被注册', 'error');
+                    generateCaptcha(); // 刷新验证码
+                } else {
+                    // 发送验证码
+                    sendVerificationCode(email);
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showMessage('系统错误，请稍后重试', 'error');
+            generateCaptcha(); // 刷新验证码
+        });
+    });
+
+    // 发送验证码函数
+    function sendVerificationCode(email) {
+        // 显示加载指示器
+        const sendingIndicator = document.getElementById('sendingIndicator');
+        sendingIndicator.classList.add('active');
+        
+        fetch('/api/register/send-code', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // 隐藏加载指示器
+            sendingIndicator.classList.remove('active');
+            
+            if (data.success) {
+                // 显示验证码表单
+                showVerificationForm();
+                // 启动倒计时
+                startCountdown();
+            } else {
+                showMessage(data.message || '发送验证码失败', 'error');
+            }
+        })
+        .catch(error => {
+            // 隐藏加载指示器
+            sendingIndicator.classList.remove('active');
+            
+            console.error('Error:', error);
+            showMessage('发送验证码失败，请稍后重试', 'error');
+        });
+    }
+
+    // 显示验证码表单
+    function showVerificationForm() {
+        const stepIndicator = document.getElementById('stepIndicator');
+        const cardContainer = document.querySelector('.card');
+        
+        // 添加第一步表单淡出动画
+        registerForm.classList.add('inactive');
+        
+        // 切换步骤指示器
+        stepIndicator.classList.add('step2');
+        step1.classList.remove('active');
+        step2.classList.add('active');
+        
+        // 添加step2激活的类，用于调整布局
+        cardContainer.classList.add('step2-active');
+        
+        // 延迟显示第二步，等待第一步淡出
+        setTimeout(() => {
+            registerForm.style.display = 'none';
+            verificationForm.style.display = 'block';
+            
+            // 延迟一点点再添加动画类，确保过渡效果正常
+            setTimeout(() => {
+                verificationForm.classList.add('active');
+            }, 50);
+        }, 300);
+    }
+
+    // 返回第一步表单
+    backButton.addEventListener('click', function() {
+        const stepIndicator = document.getElementById('stepIndicator');
+        const cardContainer = document.querySelector('.card');
+        
+        // 移除第二步的动画
+        verificationForm.classList.remove('active');
+        
+        // 切换步骤指示器
+        stepIndicator.classList.remove('step2');
+        step2.classList.remove('active');
+        
+        // 移除step2激活的类
+        cardContainer.classList.remove('step2-active');
+        
+        // 延迟显示第一步，等待第二步淡出
+        setTimeout(() => {
+            verificationForm.style.display = 'none';
+            registerForm.style.display = 'block';
+            
+            // 延迟一点点再移除inactive类，确保过渡效果正常
+            setTimeout(() => {
+                registerForm.classList.remove('inactive');
+                step1.classList.add('active');
+            }, 50);
+        }, 300);
+        
+        // 清除倒计时
+        clearInterval(countdownTimer);
+        countdownSpan.style.display = 'none';
+        resendCodeBtn.classList.remove('disabled');
+    });
+
+    // 重新发送验证码
+    resendCodeBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (!resendCodeBtn.classList.contains('disabled')) {
+            sendVerificationCode(userData.email);
+            showVerificationMessage('验证码已重新发送', 'success');
+        }
+    });
+
+    // 启动倒计时
+    function startCountdown() {
+        let seconds = 60;
+        resendCodeBtn.classList.add('disabled');
+        countdownSpan.style.display = 'inline';
+        countdownSpan.textContent = `${seconds}s后可重新发送`;
+        
+        clearInterval(countdownTimer);
+        countdownTimer = setInterval(() => {
+            seconds--;
+            countdownSpan.textContent = `${seconds}s后可重新发送`;
+            
+            if (seconds <= 0) {
+                clearInterval(countdownTimer);
+                countdownSpan.style.display = 'none';
+                resendCodeBtn.classList.remove('disabled');
+            }
+        }, 1000);
+    }
+
+    // 验证码表单提交处理
+    verificationForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const verificationCode = document.getElementById('verificationCode').value.trim();
+        
+        if (!verificationCode) {
+            showVerificationMessage('请输入验证码', 'error');
+            return;
+        }
+        
+        // 提交验证码进行验证
+        fetch('/api/register/verify-code', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: userData.email,
+                code: verificationCode,
+                username: userData.username,
+                password: userData.password
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showVerificationMessage('注册成功，正在跳转...', 'success');
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 1500);
+            } else {
+                showVerificationMessage(data.message || '验证码错误', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showVerificationMessage('验证失败，请稍后重试', 'error');
+        });
+    });
+
+    // 验证邮箱格式
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    // 显示提示信息
+    function showMessage(text, type) {
+        message.textContent = text;
+        message.className = `message ${type}`;
+        message.style.display = 'block';
+        
+        if (type === 'error') {
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 3000);
+        }
+    }
+
+    // 显示验证码表单的提示信息
+    function showVerificationMessage(text, type) {
+        verificationMessage.textContent = text;
+        verificationMessage.className = `message ${type}`;
+        verificationMessage.style.display = 'block';
+        
+        if (type === 'error') {
+            setTimeout(() => {
+                verificationMessage.style.display = 'none';
+            }, 3000);
+        }
+    }
+
+    // 切换密码显示/隐藏
+    window.togglePassword = function(inputId) {
+        const input = document.getElementById(inputId);
+        const button = input.nextElementSibling;
+        const icon = button.querySelector('i');
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            button.style.opacity = '1';
+            icon.className = 'ri-eye-off-line'; // 切换为闭眼图标
+        } else {
+            input.type = 'password';
+            button.style.opacity = '0.6';
+            icon.className = 'ri-eye-line'; // 切换回眼睛图标
+        }
+    }
+
+    // 添加主题切换功能
+    // const themeToggle = document.getElementById('themeToggle'); // 移除重复声明
+    
+    // 检查并应用保存的主题
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    }
+    
+    // 主题切换事件处理
+    themeToggle.addEventListener('click', function() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        // 切换图标
+        if (newTheme === 'dark') {
+            themeIcon.className = 'ri-moon-line';
+        } else {
+            themeIcon.className = 'ri-sun-line';
+        }
+        
+        // 添加过渡效果
+        document.body.style.transition = 'background 0.3s ease';
+        setTimeout(() => {
+            document.body.style.transition = '';
+        }, 300);
+    });
+    
+    // 检查系统偏好设置
+    function checkSystemThemePreference() {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && !localStorage.getItem('theme')) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeIcon.className = 'ri-moon-line'; // 设置为月亮图标
+        }
+    }
+    
+    // 初始检查系统主题偏好
+    checkSystemThemePreference();
+    
+    // 监听系统主题变化
+    if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+            if (!localStorage.getItem('theme')) {
+                document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+                // 更新图标
+                themeIcon.className = e.matches ? 'ri-moon-line' : 'ri-sun-line';
+            }
+        });
+    }
+
+    // 模态窗口功能
+    const userAgreementLink = document.getElementById('userAgreementLink');
+    const privacyPolicyLink = document.getElementById('privacyPolicyLink');
+    const userAgreementModal = document.getElementById('userAgreementModal');
+    const privacyPolicyModal = document.getElementById('privacyPolicyModal');
+    const closeButtons = document.querySelectorAll('[data-close-modal]');
+    
+    // 打开用户协议
+    userAgreementLink.addEventListener('click', function() {
+        userAgreementModal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // 防止背景滚动
+    });
+    
+    // 打开隐私政策
+    privacyPolicyLink.addEventListener('click', function() {
+        privacyPolicyModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+    
+    // 关闭模态窗口
+    closeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            userAgreementModal.classList.remove('active');
+            privacyPolicyModal.classList.remove('active');
+            document.body.style.overflow = ''; // 恢复背景滚动
+        });
+    });
+    
+    // 点击遮罩层关闭
+    function closeModalOnOverlayClick(event) {
+        if (event.target === this) {
+            this.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+    
+    userAgreementModal.addEventListener('click', closeModalOnOverlayClick);
+    privacyPolicyModal.addEventListener('click', closeModalOnOverlayClick);
+});
+</script>
+{% endblock %} 

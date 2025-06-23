@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">数据分析系统</title>
+    <link href="/static/css/tailwind.css" rel="stylesheet">
+    <link href="/static/fonts/remixicon/remixicon.css" rel="stylesheet">
+    <!-- 引入本地Plotly.js库 -->
+    <script src="/static/js/plotly-2.20.0.min.js"></script>
+    <script>
+        // 加载系统设置
+        async function loadSystemSettings() {
+            try {
+                const response = await fetch('/api/public-settings');
+                if (response.ok) {
+                    const settings = await response.json();
+                    
+                    // 设置系统名称
+                    if (settings.systemName) {
+                        document.getElementById('page-title').textContent = settings.systemName;
+                        // 更新其他显示系统名称的元素
+                        const systemNameElements = document.querySelectorAll('.system-name');
+                        systemNameElements.forEach(el => {
+                            el.textContent = settings.systemName;
+                        });
+                    }
+                    
+                    // 应用主题设置
+                    if (settings.defaultTheme && !localStorage.getItem('theme')) {
+                        document.documentElement.setAttribute('data-theme', settings.defaultTheme);
+                    }
+                    
+                    // 应用动画设置
+                    if (settings.animation === false && !localStorage.getItem('animation')) {
+                        document.documentElement.setAttribute('data-animation', 'off');
+                    }
+                } else {
+                    console.warn('无法加载系统设置');
+                }
+            } catch (error) {
+                console.error('加载系统设置失败:', error);
+            }
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', loadSystemSettings);
+    </script>
+</head>
+<body>
+    {% block content %}{% endblock %}
+</body>
+</html> 

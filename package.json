@@ -1,0 +1,17 @@
+{
+  "name": "ecommerce-analysis",
+  "version": "1.0.0",
+  "description": "Ecommerce analysis system",
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/styles.css -o ./static/css/tailwind.css",
+    "build:css:prod": "tailwindcss -i ./src/styles.css -o ./static/css/tailwind.css --minify"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.0.17"
+  }
+}

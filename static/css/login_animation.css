@@ -1,0 +1,325 @@
+/**
+ * 登录动画样式 - 高清晰度优化版
+ * 为登录后的数据流光效应动画提供样式支持
+ */
+
+/* 动画容器全屏设置 */
+#login-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    pointer-events: none; /* 允许点击穿透 */
+    opacity: 1;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    image-rendering: -webkit-optimize-contrast; /* 提高Safari的图形渲染锐度 */
+    image-rendering: crisp-edges; /* 改善边缘锐度 */
+}
+
+/* 淡入淡出动画 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.98); }
+}
+
+/* 动画启用禁用类 */
+[data-animation="off"] #login-animation {
+    display: none;
+}
+
+/* 欢迎文字样式 - 增强对比度和锐度 */
+.welcome-text {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", Arial, sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-align: center;
+    opacity: 0;
+    animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    background-image: linear-gradient(90deg, #4c75e6, #f5f5f7 50%, #4c75e6);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 1px rgba(255,255,255,0.05); /* 轻微描边，增强锐度 */
+    letter-spacing: -0.2px; /* 字符间距调整 */
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); /* 添加立体效果 */
+}
+
+/* 深色模式适配 - 强化色彩对比 */
+[data-theme="dark"] .welcome-text {
+    background-image: linear-gradient(90deg, #5e9eff, #ffffff 50%, #5e9eff);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 1px rgba(255,255,255,0.05); /* 轻微描边，增强锐度 */
+    letter-spacing: -0.2px; /* 字符间距调整 */
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+[data-theme="light"] .welcome-text {
+    background-image: linear-gradient(90deg, #0071e3, #000000 50%, #0071e3);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 1px rgba(255,255,255,0.05); /* 轻微描边，增强锐度 */
+    letter-spacing: -0.2px; /* 字符间距调整 */
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
+}
+
+/* 动画加载指示器 - 高对比度版本 */
+.animation-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid rgba(0, 113, 227, 0.15);
+    border-top-color: #0071e3;
+    animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    box-shadow: 0 0 15px rgba(0, 113, 227, 0.3); /* 添加光晕效果 */
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* 深色模式下动画加载指示器 */
+[data-theme="dark"] .animation-loading {
+    border: 3px solid rgba(41, 151, 255, 0.15);
+    border-top-color: #2997ff;
+    box-shadow: 0 0 15px rgba(41, 151, 255, 0.4);
+}
+
+/* 图表容器样式 - 精致化处理 */
+.chart-container {
+    position: absolute;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px); /* Safari 支持 */
+    box-shadow: 
+        0 10px 20px rgba(0, 0, 0, 0.12),
+        0 2px 6px rgba(0, 0, 0, 0.08),
+        inset 0 1px 1px rgba(255, 255, 255, 0.08);
+    opacity: 0;
+    transform: scale(0.92);
+    transition: 
+        opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), 
+        transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chart-container.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* 新增图表类型的容器样式 - 精细化图表边框和背景 */
+.chart-multifile {
+    background: linear-gradient(135deg, rgba(41, 151, 255, 0.08), rgba(0, 113, 227, 0.04));
+    border: 1px solid rgba(41, 151, 255, 0.25);
+    box-shadow: 
+        0 10px 20px rgba(0, 0, 0, 0.1),
+        0 2px 6px rgba(41, 151, 255, 0.15),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.chart-singlefile {
+    background: linear-gradient(135deg, rgba(100, 210, 255, 0.08), rgba(64, 180, 230, 0.04));
+    border: 1px solid rgba(100, 210, 255, 0.25);
+    box-shadow: 
+        0 10px 20px rgba(0, 0, 0, 0.1),
+        0 2px 6px rgba(100, 210, 255, 0.15),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.chart-ai {
+    background: linear-gradient(135deg, rgba(94, 92, 230, 0.08), rgba(191, 90, 242, 0.04));
+    border: 1px solid rgba(94, 92, 230, 0.25);
+    box-shadow: 
+        0 10px 20px rgba(0, 0, 0, 0.1),
+        0 2px 6px rgba(94, 92, 230, 0.15),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.chart-sales {
+    background: linear-gradient(135deg, rgba(48, 209, 88, 0.08), rgba(40, 167, 69, 0.04));
+    border: 1px solid rgba(48, 209, 88, 0.25);
+    box-shadow: 
+        0 10px 20px rgba(0, 0, 0, 0.1),
+        0 2px 6px rgba(48, 209, 88, 0.15),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.chart-detective {
+    background: linear-gradient(135deg, rgba(255, 159, 10, 0.08), rgba(220, 53, 69, 0.04));
+    border: 1px solid rgba(255, 159, 10, 0.25);
+    box-shadow: 
+        0 10px 20px rgba(0, 0, 0, 0.1),
+        0 2px 6px rgba(255, 159, 10, 0.15),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+/* 跳过按钮样式 - 提升质感 */
+#login-animation-skip-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    z-index: 10000;
+    box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.15),
+        0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Arial, sans-serif;
+    border: none;
+    letter-spacing: 0.2px;
+    text-rendering: optimizeLegibility; /* 优化文字渲染 */
+    -webkit-font-smoothing: antialiased; /* 平滑文字 */
+}
+
+[data-theme="dark"] #login-animation-skip-button {
+    background-color: rgba(60, 60, 67, 0.75);
+    color: #ffffff;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+[data-theme="light"] #login-animation-skip-button {
+    background-color: rgba(240, 240, 245, 0.75);
+    color: #1d1d1f;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+#login-animation-skip-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 5px 15px rgba(0, 0, 0, 0.25),
+        0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="dark"] #login-animation-skip-button:hover {
+    background-color: rgba(80, 80, 87, 0.85);
+}
+
+[data-theme="light"] #login-animation-skip-button:hover {
+    background-color: rgba(220, 220, 225, 0.85);
+}
+
+/* 数据故事线指示器 - 精致化设计 */
+.story-indicator {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 320px;
+    height: 32px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.15),
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    background-color: rgba(30, 30, 35, 0.5);
+}
+
+.story-progress {
+    height: 100%;
+    width: 0%;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background-size: 200% auto;
+    animation: shimmer 2s infinite linear; /* 添加光泽动画 */
+}
+
+@keyframes shimmer {
+    to { background-position: 200% center; }
+}
+
+[data-theme="dark"] .story-progress {
+    background-image: linear-gradient(90deg, #2997ff, #5e5ce6, #bf5af2, #5e5ce6, #2997ff);
+    background-size: 200% auto;
+}
+
+[data-theme="light"] .story-progress {
+    background-image: linear-gradient(90deg, #0071e3, #5e5ce6, #bf5af2, #5e5ce6, #0071e3);
+    background-size: 200% auto;
+}
+
+.story-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Arial, sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: 0.2px;
+}
+
+[data-theme="dark"] .story-text {
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .story-text {
+    color: #1d1d1f;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .welcome-text {
+        font-size: 1.4rem;
+    }
+    
+    .animation-loading {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .story-indicator {
+        width: 85%;
+        height: 28px;
+    }
+    
+    .story-text {
+        font-size: 12px;
+    }
+}
+
+/* 性能优化设置 */
+#login-animation {
+    will-change: transform, opacity;
+}
+
+#login-animation-canvas {
+    will-change: transform;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+} 
