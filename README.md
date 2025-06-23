@@ -3,9 +3,11 @@
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Flask](https://img.shields.io/badge/Flask-2.0+-green.svg)](https://flask.palletsprojects.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-lightgrey.svg)](https://github.com/yourusername/data-analysis-system)
+[![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-lightgrey.svg)](https://github.com/jom111-111/data-analysis-system)
 
 > 🎯 一个功能强大的Web数据分析平台，集成多文件比较、AI智能分析、销售趋势预测等功能，为企业数据决策提供全方位支持。
+> 
+> ✨ **现代化界面** | 🎨 **粒子动画** | 🌓 **深色主题** | 📱 **响应式设计**
 
 ## ✨ 核心特性
 
@@ -63,28 +65,42 @@ python app.py
 
 ## 📸 界面预览
 
-<table>
-  <tr>
-    <td align="center">
-      <img src="static/screenshots/dashboard.png" width="400px" alt="数据仪表盘"/>
-      <br/><sub><b>📊 数据仪表盘</b></sub>
-    </td>
-    <td align="center">
-      <img src="static/screenshots/analysis.png" width="400px" alt="数据分析"/>
-      <br/><sub><b>🔍 数据分析</b></sub>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="static/screenshots/ai-analysis.png" width="400px" alt="AI分析"/>
-      <br/><sub><b>🤖 AI智能分析</b></sub>
-    </td>
-    <td align="center">
-      <img src="static/screenshots/settings.png" width="400px" alt="设置界面"/>
-      <br/><sub><b>⚙️ 个性化设置</b></sub>
-    </td>
-  </tr>
-</table>
+### 🏠 主界面
+<div align="center">
+  <img src="static/screenshots/dashboard.png" width="800px" alt="智能数据分析系统主界面"/>
+  <br/>
+  <sub><b>🎨 现代化深色主题 | ✨ 粒子动画背景 | 🎯 四大核心功能模块</b></sub>
+</div>
+
+### 🤖 AI智能分析
+<div align="center">
+  <img src="static/screenshots/ai-analysis.png" width="800px" alt="AI智能分析界面"/>
+  <br/>
+  <sub><b>💬 智能对话界面 | 🧠 AI数据助手 | 📊 Excel数据分析专家</b></sub>
+</div>
+
+### 📈 销售趋势分析
+<div align="center">
+  <img src="static/screenshots/sales-trend.png" width="800px" alt="销售趋势分析界面"/>
+  <br/>
+  <sub><b>📊 时间序列分析 | 📈 趋势预测 | 🔍 异常点检测 | 📁 拖拽上传</b></sub>
+</div>
+
+---
+
+> 🎨 **核心功能**
+> 
+> - 📊 **多文件比较** - 支持Excel文件批量对比分析
+> - 🔍 **单文件分析** - 深度挖掘单一数据源价值
+> - 🤖 **AI智能分析** - 基于GPT的智能对话式数据分析
+> - 📈 **销售趋势分析** - 时间序列分析、趋势预测、异常检测
+>
+> 🌟 **界面亮点**：
+> - 💬 **AI对话界面** - 自然语言交互，智能数据问答
+> - 🎯 **现代化设计** - 卡片式布局，直观易用
+> - ✨ **粒子动画** - 动态背景效果，可自定义颜色
+> - 🌓 **深色主题** - 专业视觉体验，保护用户视力
+> - 📱 **响应式布局** - 完美适配桌面端和移动端
 
 ## 🛠️ 技术栈
 
@@ -126,12 +142,14 @@ python app.py
 
 ### 📊 销售趋势分析
 ```python
-# 时间序列分析
-- 多粒度时间聚合（日/周/月/季/年）
-- 趋势分析与预测
-- 季节性模式识别
-- 异常点检测
-- 业务指标监控
+# 时间序列分析功能
+- 📁 拖拽上传Excel销售数据（支持XLSX/XLS格式）
+- 📊 多粒度时间聚合（日/周/月/季/年）
+- 📈 销售额变化趋势分析
+- 📉 同比增长和环比增长计算
+- 🔍 自动异常点检测与标记
+- 📋 详细的趋势分析报告
+- 📱 响应式图表展示
 ```
 
 ## ⚙️ 配置说明
