@@ -1,0 +1,23 @@
+{
+  "name": "智能数据分析系统",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {}
+  },
+  "postCreateCommand": "pip install -r requirements.txt",
+  "forwardPorts": [5001],
+  "portsAttributes": {
+    "5001": {
+      "label": "Flask App",
+      "onAutoForward": "notify"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.flake8"
+      ]
+    }
+  }
+} 
