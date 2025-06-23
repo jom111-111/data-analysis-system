@@ -7121,12 +7121,19 @@ def admin_sales_stats():
         }
         return jsonify(fallback_stats)
             
+# 初始化数据库和必要的设置
+init_db()
+init_admin_password_metadata()
+init_all_users_password_metadata()
+start_health_check_scheduler()
+
 if __name__ == '__main__':
     logger.info("应用启动")
-    # 初始化管理员密码元数据
-    init_admin_password_metadata()
-    # 初始化所有用户的密码元数据
-    init_all_users_password_metadata()
-    # 启动系统健康检查定时任务
-    start_health_check_scheduler()
-    app.run(debug=True, host='127.0.0.1', port=5001, use_reloader=False) 
+    # 开发环境配置
+    app.run(debug=True, host='127.0.0.1', port=5001, use_reloader=False)
+else:
+    # 生产环境配置
+    logger.info("应用在生产环境启动")
+    # 获取端口号，默认为5000
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False) 

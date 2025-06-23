@@ -8,4 +8,5 @@ numpy==1.26.4
 yagmail==0.15.293
 requests==2.31.0
 Pillow==11.1.0
-statsmodels==0.14.2 
+statsmodels==0.14.2
+gunicorn==21.2.0 
