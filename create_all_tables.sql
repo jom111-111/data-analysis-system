@@ -151,7 +151,98 @@ CREATE TABLE IF NOT EXISTS deactivated_users (
     data_backup TEXT
 );
 
--- -- 14. 数据侦探模式 - 侦探进度表
+-- 14. 系统设置表
+CREATE TABLE IF NOT EXISTS settings (
+    id INTEGER PRIMARY KEY,
+    key TEXT UNIQUE NOT NULL,
+    value TEXT NOT NULL,
+    description TEXT,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 添加设置表需要的键值对记录
+INSERT OR IGNORE INTO settings (key, value, description) VALUES 
+('system_name', '数据分析系统', '系统名称'),
+('system_description', '', '系统描述'),
+('admin_email', '', '管理员邮箱'),
+('login_attempts', '5', '最大登录尝试次数'),
+('min_password_length', '8', '最小密码长度'),
+('session_timeout', '30', '会话超时时间（分钟）'),
+('require_uppercase', '1', '是否要求密码包含大写字母'),
+('require_numbers', '1', '是否要求密码包含数字'),
+('require_special', '1', '是否要求密码包含特殊字符'),
+('log_level', 'INFO', '日志级别'),
+('log_retention', '30', '日志保留天数'),
+('log_size_limit', '100', '日志文件大小限制（MB）'),
+('default_theme', 'light', '默认主题'),
+('animation', 'on', '是否启用动画'),
+('show_avatar', 'on', '是否显示头像'),
+('typewriter_effect', 'on', '是否启用打字机效果'),
+('typewriter_speed', 'medium', '打字机效果速度'),
+('default_font', 'system', '默认字体'),
+('bubble_style', 'square', '气泡样式');
+
+-- 15. 多文件/单文件分析记录表
+CREATE TABLE IF NOT EXISTS analysis_records (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    file_count INTEGER NOT NULL,
+    analysis_mode TEXT NOT NULL,
+    processing_time REAL NOT NULL,
+    file_names TEXT,
+    status TEXT DEFAULT 'success',
+    response_time REAL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 16. AI分析记录表
+CREATE TABLE IF NOT EXISTS ai_analysis_records (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    question TEXT NOT NULL,
+    response TEXT NOT NULL,
+    response_time REAL NOT NULL,
+    status TEXT DEFAULT 'success',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 17. 销售趋势分析记录表
+CREATE TABLE IF NOT EXISTS sales_trend_records (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    file_name TEXT NOT NULL,
+    analysis_type TEXT NOT NULL,
+    processing_time REAL DEFAULT 0,
+    status TEXT DEFAULT 'success',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 18. 登录历史记录表
+CREATE TABLE IF NOT EXISTS login_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    ip_address TEXT,
+    status TEXT NOT NULL,
+    login_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_admin INTEGER DEFAULT 0,
+    user_agent TEXT,
+    location TEXT,
+    device_type TEXT,
+    browser TEXT,
+    os TEXT
+);
+
+-- 创建索引以提高查询性能
+CREATE INDEX IF NOT EXISTS idx_analysis_username ON analysis_records (username);
+CREATE INDEX IF NOT EXISTS idx_analysis_created_at ON analysis_records (created_at);
+CREATE INDEX IF NOT EXISTS idx_ai_analysis_username ON ai_analysis_records (username);
+CREATE INDEX IF NOT EXISTS idx_ai_analysis_created_at ON ai_analysis_records (created_at);
+CREATE INDEX IF NOT EXISTS idx_sales_trend_username ON sales_trend_records (username);
+CREATE INDEX IF NOT EXISTS idx_sales_trend_created_at ON sales_trend_records (created_at);
+CREATE INDEX IF NOT EXISTS idx_login_history_username ON login_history (username);
+CREATE INDEX IF NOT EXISTS idx_login_history_time ON login_history (login_time);
+
+-- -- 19. 数据侦探模式 - 侦探进度表
 -- CREATE TABLE IF NOT EXISTS detective_progress (
 --     id INTEGER PRIMARY KEY AUTOINCREMENT,
 --     user_id INTEGER NOT NULL,
