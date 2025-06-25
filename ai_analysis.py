@@ -17,9 +17,9 @@ import chardet  # 添加字符编码检测库
 from datetime import datetime
 
 # OpenRouter API配置
-OPENROUTER_API_KEY = "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"
-OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
-OPENROUTER_MODEL = "deepseek/deepseek-r1:free"
+OPENROUTER_API_KEY = ""
+OPENROUTER_API_URL = ""
+OPENROUTER_MODEL = ""
 
 # 创建一个带有重试机制的session
 def create_retry_session():
